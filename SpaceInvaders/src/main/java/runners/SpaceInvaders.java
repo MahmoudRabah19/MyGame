@@ -12,7 +12,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogEvent;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,7 +31,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -37,6 +42,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class SpaceInvaders extends Application {
+	Scene firstScene, howToPlayScene;
+
 	AnimationTimer timer;
 	GridPane gPane = new GridPane();
 	Pane pane = new Pane();
@@ -44,7 +51,7 @@ public class SpaceInvaders extends Application {
 	List<ImageView> Enemies = new ArrayList<ImageView>();
 	List<Circle> enemiesShoot = new ArrayList<Circle>();
 	List<Rectangle> artilleryShoot = new ArrayList<Rectangle>();
-	ImageView Player;
+	Polygon Player;
 	Text Score;
 	Text Lives;
 	int scoreNum = 0;
@@ -57,24 +64,20 @@ public class SpaceInvaders extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 
-		timer = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-
-			}
-		};
 		Background bg = new Background(new BackgroundFill(Color.BLACK, null, null));
 		firstScene(primaryStage);
 		Player = newPlayer();
 		playerMove(Player);
+
 		TextEdit();
 		music();
 		gPane.add(Lives, 0, 0);
 		gPane.add(Score, 0, 1);
 		pane.getChildren().add(gPane);
 		pane.setBackground(bg);
+		//playerShoot();
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
-			if (Enemies.isEmpty()) {
+			if (!Enemies.isEmpty()) {
 				EnemiesShoot();
 			}
 		}));
@@ -93,9 +96,16 @@ public class SpaceInvaders extends Application {
 
 	}
 
-	private void playerShoot(double d) {
-		// TODO Auto-generated method stub
+	private void playerShoot() {
+		Circle circle = new Circle(25);
+		circle.setFill(Color.RED);
+		scene.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.W) {
+				circle.setLayoutX(Player.getLayoutX());
+				circle.setLayoutY(Player.getLayoutY() - 10);
+			}
 
+		});
 	}
 
 	private void EnemiesMove() {
@@ -104,23 +114,31 @@ public class SpaceInvaders extends Application {
 	}
 
 	private void firstScene(Stage primaryStage) {
-		Image i = new Image("file:///C:/Users/עידן/workspace/SpaceInvaders/src/main/java/runners/SpaceInvaders.jpg");
+		Image i = new Image("BackGround.PNG");
 		Button play = new Button("Play");
 		Button howToPlay = new Button("How To Play");
 		Button exit = new Button("Exit");
 		VBox vBox = new VBox();
-		vBox.setPadding(new Insets(250));
+		vBox.setPadding(new Insets(230));
+		play.setMaxSize(100, 200);
+		howToPlay.setMaxSize(100, 200);
+		exit.setMaxSize(100, 200);
 		BackgroundImage bg = new BackgroundImage(i, null, null, null, null);
 		vBox.setBackground(new Background(bg));
 		vBox.getChildren().addAll(play, howToPlay, exit);
-		Scene firstScene = new Scene(vBox, 600, 650);
+		firstScene = new Scene(vBox, 600, 650);
 		primaryStage.setScene(firstScene);
 		primaryStage.show();
 		primaryStage.setResizable(false);
+		primaryStage.getIcons()
+				.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
 		play.setOnAction(e -> {
+
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
+			primaryStage.getIcons()
+					.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
 
 		});
 		howToPlay.setOnAction(e -> {
@@ -129,22 +147,32 @@ public class SpaceInvaders extends Application {
 			back.setLayoutY(600.0);
 			back.setLayoutX(250.0);
 			Image image = new Image(
-					"file:///C:/Users/עידן/workspace/SpaceInvaders/src/main/java/runners/HowToPlay.PNG");
+					"file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/HowToPlay.PNG");
 			BackgroundImage bg1 = new BackgroundImage(image, null, null, null, null);
 			pane.setBackground(new Background(bg1));
 			pane.getChildren().add(back);
-			Scene textScene = new Scene(pane, 600, 650);
+			howToPlayScene = new Scene(pane, 600, 650);
 			back.setOnAction(event -> {
 				primaryStage.setScene(firstScene);
 				primaryStage.show();
 				primaryStage.setResizable(false);
+				primaryStage.getIcons().add(
+						new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
 			});
-			primaryStage.setScene(textScene);
+			primaryStage.setScene(howToPlayScene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
+			primaryStage.getIcons()
+					.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
 		});
 		exit.setOnAction(e -> {
-			primaryStage.close();
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.setTitle("Exit");
+			alert.setContentText("Are You Sure To Exit ?");
+			alert.show();
+			alert.setOnHiding(event -> {
+				primaryStage.close();
+			});
 		});
 	}
 
@@ -161,7 +189,7 @@ public class SpaceInvaders extends Application {
 			MediaPlayer mi = new MediaPlayer(new Media("file:///C:/Users/עידן/Downloads/Music/GameOver.mp3"));
 			mi.setAutoPlay(true);
 			pane.getChildren().add(gameOver);
-			// timer.stop();
+			timer.stop();
 		}
 	}
 
@@ -181,17 +209,22 @@ public class SpaceInvaders extends Application {
 		}
 	}
 
-	private void playerMove(ImageView player2) {
+	private void playerMove(Polygon player) {
 		scene.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.A) {
+				player.setLayoutX(player.getLayoutX() - 10);
+				if (player.getLayoutX() - 10 < 0) {
+					player.setLayoutX(10);
+				}
+			}
+			if (e.getCode() == KeyCode.D) {
+				player.setLayoutX(player.getLayoutX() + 10);
+				if (player.getLayoutX() + 10 > 600) {
+					player.setLayoutX(590);
+				}
+			}
 
-			if (e.getCode() == KeyCode.LEFT) {
-				player2.setLayoutX(player2.getLayoutX() - 50);
-			}
-			if (e.getCode() == KeyCode.RIGHT) {
-				player2.setLayoutX(player2.getLayoutX() + 50);
-			}
 		});
-
 	}
 
 	private void music() {
@@ -229,14 +262,12 @@ public class SpaceInvaders extends Application {
 
 	}
 
-	private ImageView newPlayer() {
-		ImageView newPlayer;
-		newPlayer = new ImageView(
-				new Image("file:///C:/Users/עידן/workspace/SpaceInvaders/src/main/java/runners/6Bignkbc8.png"));
-		newPlayer.setLayoutX(250.0);
+	private Polygon newPlayer() {
+		Polygon newPlayer = new Polygon();
+		newPlayer.getPoints().addAll(new Double[] { 0.0, -25.0, -25.0, 25.0, 0.0, 15.0, 25.0, 25.0, 0.0, -25.0 });
+		newPlayer.setFill(Color.BLUE);
+		newPlayer.setLayoutX(300.0);
 		newPlayer.setLayoutY(600.0);
-		newPlayer.setFitWidth(50.0);
-		newPlayer.setFitHeight(50.0);
 		pane.getChildren().add(newPlayer);
 		return newPlayer;
 	}
