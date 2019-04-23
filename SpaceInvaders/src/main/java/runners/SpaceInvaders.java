@@ -131,14 +131,14 @@ public class SpaceInvaders extends Application {
 		primaryStage.show();
 		primaryStage.setResizable(false);
 		primaryStage.getIcons()
-				.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
+				.add(new Image("icon.jpg"));
 		play.setOnAction(e -> {
 
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
 			primaryStage.getIcons()
-					.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
+					.add(new Image("icon.jpg"));
 
 		});
 		howToPlay.setOnAction(e -> {
@@ -147,7 +147,7 @@ public class SpaceInvaders extends Application {
 			back.setLayoutY(600.0);
 			back.setLayoutX(250.0);
 			Image image = new Image(
-					"file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/HowToPlay.PNG");
+					"HowToPlay.PNG");
 			BackgroundImage bg1 = new BackgroundImage(image, null, null, null, null);
 			pane.setBackground(new Background(bg1));
 			pane.getChildren().add(back);
@@ -157,13 +157,13 @@ public class SpaceInvaders extends Application {
 				primaryStage.show();
 				primaryStage.setResizable(false);
 				primaryStage.getIcons().add(
-						new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
+						new Image("icon.jpg"));
 			});
 			primaryStage.setScene(howToPlayScene);
 			primaryStage.show();
 			primaryStage.setResizable(false);
 			primaryStage.getIcons()
-					.add(new Image("file:///C:/Users/עידן/git/MyGame/SpaceInvaders/src/main/java/runners/icon.jpg"));
+					.add(new Image("icon.jpg"));
 		});
 		exit.setOnAction(e -> {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
