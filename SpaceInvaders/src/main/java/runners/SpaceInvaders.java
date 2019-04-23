@@ -1,26 +1,24 @@
 package runners;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogEvent;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -33,7 +31,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -169,10 +166,13 @@ public class SpaceInvaders extends Application {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.setTitle("Exit");
 			alert.setContentText("Are You Sure To Exit ?");
-			alert.show();
-			alert.setOnHiding(event -> {
+			
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK){
 				primaryStage.close();
-			});
+			} else {
+				alert.close();
+			}
 		});
 	}
 
@@ -186,7 +186,16 @@ public class SpaceInvaders extends Application {
 			gameOver.setStrokeWidth(3);
 			gameOver.setX(90);
 			gameOver.setY(300);
-			MediaPlayer mi = new MediaPlayer(new Media("file:///C:/Users/עידן/Downloads/Music/GameOver.mp3"));
+			
+			
+			 Media media = null;
+				try {
+					media = new Media(getClass().getResource("/music/GameSound.mp3").toURI().toString());
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    MediaPlayer mi = new MediaPlayer(media);
 			mi.setAutoPlay(true);
 			pane.getChildren().add(gameOver);
 			timer.stop();
@@ -202,7 +211,15 @@ public class SpaceInvaders extends Application {
 			win.setFill(Color.YELLOW);
 			win.setStrokeWidth(3);
 			win.setStroke(Color.GOLD);
-			MediaPlayer mp = new MediaPlayer(new Media("file:///C:/Users/עידן/Downloads/Music/YouWin.mp3"));
+			
+			 Media media = null;
+				try {
+					media = new Media(getClass().getResource("/music/GameSound.mp3").toURI().toString());
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			MediaPlayer mp = new MediaPlayer(media);
 			mp.setAutoPlay(true);
 			pane.getChildren().add(win);
 			// timer.stop();
@@ -231,7 +248,13 @@ public class SpaceInvaders extends Application {
 		Text text = new Text("Sound:");
 		RadioButton start = new RadioButton("ON");
 		RadioButton stop = new RadioButton("OFF");
-		Media media = new Media("file:///C:/Users/עידן/Desktop/GameSound.mp3");
+	    Media media = null;
+		try {
+			media = new Media(getClass().getResource("/music/GameSound.mp3").toURI().toString());
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		MediaPlayer mPlayer = new MediaPlayer(media);
 		start.setOnAction(e -> {
 			mPlayer.play();
